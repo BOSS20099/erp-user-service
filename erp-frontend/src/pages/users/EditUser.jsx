@@ -1,118 +1,233 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { updateUser, getUsers } from "../../services/userService";
+import {useEffect,useCallback,useState} from "react";
+import {useParams, useNavigate} from "react-router-dom";
+import {updateUser,getUser,getUserRoles,assignRoles} from "../../services/userService";
+import axios from "axios";
 
-const EditUser = () => {
-  const { id } = useParams();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: ""
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [fetching, setFetching] = useState(true);
+export default function EditUser(){
+  const {id}=useParams();
+  const navigate=useNavigate();
+  const [user,setUser]=useState({username:"",email:"",password:""});
+  const [roles, setRoles] = useState([]);
+  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [loading,setLoading]=useState(true);
+  const [submitting,setSubmitting]=useState(false);
+  const [error,setError]=useState("");
 
-  useEffect(() => {
-    fetchUser();
-  }, [id]);
-
-  const fetchUser = async () => {
-    try {
-      setFetching(true);
-      const response = await getUsers();
-      const user = response.data.find(u => u.id === parseInt(id));
-      if (user) {
-        setFormData(user);
-      } else {
-        setError("User not found");
-      }
-    } catch (err) {
-      setError("Failed to fetch user");
+  const loadData=useCallback(async()=>{
+    try{
+      const userRes = await getUser(id);
+      setUser(userRes.data);
+      
+      const rolesRes = await axios.get("http://localhost:8080/api/roles");
+      setRoles(rolesRes.data);
+      
+      const userRolesRes = await getUserRoles(id);
+      setSelectedRoles(userRolesRes.data.map(r => r.id));
+      
+      setLoading(false);
+    }catch(err){
       console.error(err);
-    } finally {
-      setFetching(false);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      await updateUser(id, formData);
-      setSuccess(true);
-      setTimeout(() => {
-        window.location.href = "/users";
-      }, 1500);
-    } catch (err) {
-      setError("Failed to update user");
-      console.error(err);
-    } finally {
+      setError("Erreur lors du chargement des données");
       setLoading(false);
     }
+  }, [id]);
+
+  useEffect(()=>{
+    loadData();
+  },[loadData]);
+
+  const handleRoleChange = (roleId) => {
+    if (selectedRoles.includes(roleId)) {
+      setSelectedRoles(selectedRoles.filter(r => r !== roleId));
+    } else {
+      setSelectedRoles([...selectedRoles, roleId]);
+    }
   };
 
-  if (fetching) return <div className="text-center p-4">Loading...</div>;
+  const submit=async(e)=>{
+    e.preventDefault();
+    setError("");
+    setSubmitting(true);
+    try {
+      await updateUser(id, user);
+      await assignRoles(id, { roleIds: selectedRoles });
+      navigate("/users");
+    } catch (err) {
+      console.error("Error:", err);
+      setError(err.response?.data?.message || "Erreur lors de la mise à jour de l'utilisateur");
+      setSubmitting(false);
+    }
+  };
 
-  return (
-    <div className="container mx-auto p-4 max-w-md">
-      <h2 className="text-3xl font-bold mb-4">Edit User</h2>
-      {error && <div className="text-red-600 mb-4">{error}</div>}
-      {success && <div className="text-green-600 mb-4">User updated successfully!</div>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block font-bold mb-1">Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-400 p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block font-bold mb-1">Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-400 p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block font-bold mb-1">Role:</label>
-          <input
-            type="text"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className="w-full border border-gray-400 p-2 rounded"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white px-4 py-2 rounded font-bold hover:bg-blue-700 disabled:bg-gray-400"
-        >
-          {loading ? "Updating..." : "Update User"}
-        </button>
-      </form>
+  if(loading) return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+      <div className="text-center">
+        <div className="loading-spinner mx-auto mb-4"></div>
+        <p className="text-white text-xl">Chargement des données...</p>
+      </div>
     </div>
   );
-};
 
-export default EditUser;
+  return(
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 p-8">
+      {/* Decorative elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-40 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+        <div className="absolute -bottom-40 left-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+      </div>
+
+      <div className="relative z-10 max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 animate-fade-in-up">
+          <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-500 mb-2">
+            ✏️ Modifier l'utilisateur
+          </h1>
+          <p className="text-slate-400 text-lg">ID: {id}</p>
+        </div>
+
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-6 p-4 rounded-xl animate-fade-in-up bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg font-semibold">
+            ❌ {error}
+          </div>
+        )}
+
+        {/* Form Card */}
+        <form onSubmit={submit} className="card p-8 animate-fade-in-up space-y-6">
+          
+          {/* User Information Section */}
+          <div>
+            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-6">
+              👤 Informations de l'utilisateur
+            </h2>
+
+            {/* Username Field */}
+            <div className="mb-5">
+              <label className="block text-sm font-bold text-slate-700 mb-2">
+                👤 Nom d'utilisateur
+              </label>
+              <input
+                type="text"
+                placeholder="Entrez le nom d'utilisateur"
+                value={user.username}
+                onChange={e=>setUser({...user,username:e.target.value})}
+                className="input-field"
+                disabled={submitting}
+              />
+            </div>
+
+            {/* Email Field */}
+            <div className="mb-5">
+              <label className="block text-sm font-bold text-slate-700 mb-2">
+                📧 Email
+              </label>
+              <input
+                type="email"
+                placeholder="Entrez l'adresse email"
+                value={user.email}
+                onChange={e=>setUser({...user,email:e.target.value})}
+                className="input-field"
+                disabled={submitting}
+              />
+            </div>
+
+            {/* Password Field */}
+            <div className="mb-5">
+              <label className="block text-sm font-bold text-slate-700 mb-2">
+                🔒 Mot de passe (optionnel)
+              </label>
+              <input
+                type="password"
+                placeholder="Laisser vide pour conserver l'ancien mot de passe"
+                onChange={e=>setUser({...user,password:e.target.value})}
+                className="input-field"
+                disabled={submitting}
+              />
+              <p className="text-xs text-slate-500 mt-1">💡 Ne remplissez que si vous voulez changer le mot de passe</p>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t-2 border-slate-200"></div>
+
+          {/* Roles Section */}
+          <div>
+            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-6">
+              🎯 Rôles assignés
+            </h2>
+            <p className="text-slate-500 text-sm mb-4">Modifiez les rôles de cet utilisateur</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {roles.map((role, idx) => (
+                <label 
+                  key={role.id} 
+                  className={`card p-4 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                    selectedRoles.includes(role.id) 
+                      ? 'ring-2 ring-blue-500 bg-blue-50' 
+                      : 'hover:shadow-lg'
+                  }`}
+                  style={{ animationDelay: `${idx * 50}ms` }}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="relative flex items-center mt-1">
+                      <input
+                        type="checkbox"
+                        checked={selectedRoles.includes(role.id)}
+                        onChange={() => handleRoleChange(role.id)}
+                        className="w-5 h-5 accent-blue-500 cursor-pointer"
+                        disabled={submitting}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-bold text-slate-900">{role.name}</p>
+                      <p className="text-xs text-slate-600 mt-1">{role.description}</p>
+                    </div>
+                  </div>
+                </label>
+              ))}
+            </div>
+
+            {selectedRoles.length > 0 && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <p className="text-sm text-blue-900 font-semibold">
+                  ✓ {selectedRoles.length} rôle(s) sélectionné(s)
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="border-t-2 border-slate-200"></div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 pt-4">
+            <button 
+              type="submit"
+              disabled={submitting}
+              className="flex-1 btn-primary font-bold text-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {submitting ? (
+                <>
+                  <span className="loading-spinner mx-0"></span>
+                  Mise à jour en cours...
+                </>
+              ) : (
+                <>
+                  ✓ Mettre à jour
+                </>
+              )}
+            </button>
+            <button 
+              type="button" 
+              onClick={() => navigate("/users")}
+              disabled={submitting}
+              className="flex-1 btn-danger font-bold text-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              ← Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

@@ -2,7 +2,10 @@ package com.erp.userservice.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
@@ -12,20 +15,30 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 100, unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String password;
 
     private Boolean enabled;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     public User() {}
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 
     public Long getId() {
         return id;
