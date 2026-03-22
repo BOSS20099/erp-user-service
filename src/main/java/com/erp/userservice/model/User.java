@@ -12,6 +12,7 @@ public class User {
     private String email;
     private String password;
     private Boolean enabled;
+    private String profilePhoto;
     private LocalDateTime createdAt;
 
     public User() {}
@@ -61,6 +62,14 @@ public class User {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 
     public LocalDateTime getCreatedAt() {

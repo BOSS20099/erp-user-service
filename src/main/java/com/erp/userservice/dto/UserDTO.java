@@ -8,6 +8,8 @@ public class UserDTO {
 
     private String password;
 
+    private String profilePhoto;
+
     public UserDTO() {}
 
     public String getUsername() {
@@ -32,6 +34,14 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 
 }

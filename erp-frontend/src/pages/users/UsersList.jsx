@@ -223,13 +223,25 @@ return(
               >
                 {/* User Header */}
                 <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="text-sm text-rose-600 font-semibold">ID: {u.id}</div>
-                    <h3 className="text-2xl font-black text-rose-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-rose-600 group-hover:to-pink-600 transition-all duration-300">
-                      {u.username}
-                    </h3>
+                  <div className="flex items-center gap-3">
+                    {u.profilePhoto ? (
+                      <img 
+                        src={u.profilePhoto} 
+                        alt={u.username} 
+                        className="w-12 h-12 rounded-full object-cover border-2 border-rose-300"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-rose-400 to-pink-400 flex items-center justify-center text-white font-bold text-lg">
+                        {u.username.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <div>
+                      <div className="text-sm text-rose-600 font-semibold">ID: {u.id}</div>
+                      <h3 className="text-2xl font-black text-rose-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-rose-600 group-hover:to-pink-600 transition-all duration-300">
+                        {u.username}
+                      </h3>
+                    </div>
                   </div>
-                  <div className="text-3xl">👤</div>
                 </div>
 
                 {/* User Info */}

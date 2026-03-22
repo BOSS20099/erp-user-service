@@ -79,16 +79,17 @@ public class UserRepository {
         
         try {
             jdbcTemplate.execute((CallableStatementCreator) con -> {
-                CallableStatement cs = con.prepareCall("{CALL sp_create_user(?, ?, ?, ?, ?)}");
+                CallableStatement cs = con.prepareCall("{CALL sp_create_user(?, ?, ?, ?, ?, ?)}");
                 cs.setString(1, user.getUsername());
                 cs.setString(2, user.getEmail());
                 cs.setString(3, user.getPassword());
                 cs.setBoolean(4, user.getEnabled() != null ? user.getEnabled() : true);
-                cs.registerOutParameter(5, Types.BIGINT);
+                cs.setString(5, user.getProfilePhoto());
+                cs.registerOutParameter(6, Types.BIGINT);
                 return cs;
             }, (CallableStatement cs) -> {
                 cs.executeUpdate();
-                generatedId[0] = cs.getLong(5);
+                generatedId[0] = cs.getLong(6);
                 return null;
             });
         } catch (Exception e) {
@@ -101,9 +102,9 @@ public class UserRepository {
     /**
      * Update user via stored procedure
      */
-    public void updateUser(Long id, String username, String email) {
-        String sql = "CALL sp_update_user(?, ?, ?)";
-        jdbcTemplate.update(sql, id, username, email);
+    public void updateUser(Long id, String username, String email, String profilePhoto) {
+        String sql = "CALL sp_update_user(?, ?, ?, ?)";
+        jdbcTemplate.update(sql, id, username, email, profilePhoto);
     }
 
     /**
@@ -124,6 +125,11 @@ public class UserRepository {
         user.setEmail(rs.getString("email"));
         user.setPassword(rs.getString("password"));
         user.setEnabled(rs.getBoolean("enabled"));
+        try {
+            user.setProfilePhoto(rs.getString("profilePhoto"));
+        } catch (Exception e) {
+            user.setProfilePhoto(null);
+        }
 
         java.sql.Timestamp timestamp = rs.getTimestamp("created_at");
         if (timestamp != null) {

@@ -50,6 +50,7 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
         user.setEnabled(true);
+        user.setProfilePhoto(dto.getProfilePhoto());
         
         // Save and return the user with generated ID
         return userRepository.save(user);
@@ -59,7 +60,8 @@ public class UserService {
         userRepository.updateUser(
                 id,
                 dto.getUsername(),
-                dto.getEmail()
+                dto.getEmail(),
+                dto.getProfilePhoto()
         );
         return getUser(id);
     }

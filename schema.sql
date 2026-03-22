@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `enabled` tinyint(1) DEFAULT NULL,
+  `profile_photo` longtext DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
