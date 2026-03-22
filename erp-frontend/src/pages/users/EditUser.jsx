@@ -60,34 +60,34 @@ export default function EditUser(){
   };
 
   if(loading) return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-rose-100">
       <div className="text-center">
         <div className="loading-spinner mx-auto mb-4"></div>
-        <p className="text-white text-xl">Chargement des données...</p>
+        <p className="text-rose-700 text-xl">Chargement des données...</p>
       </div>
     </div>
   );
 
   return(
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-rose-100 p-8">
       {/* Decorative elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-40 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
-        <div className="absolute -bottom-40 left-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+        <div className="absolute -bottom-40 left-20 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8 animate-fade-in-up">
-          <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-500 mb-2">
+          <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-rose-600 mb-2">
             ✏️ Modifier l'utilisateur
           </h1>
-          <p className="text-slate-400 text-lg">ID: {id}</p>
+          <p className="text-rose-600 text-lg">ID: {id}</p>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-6 p-4 rounded-xl animate-fade-in-up bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg font-semibold">
+          <div className="mb-6 p-4 rounded-xl animate-fade-in-up bg-gradient-to-r from-rose-400 to-pink-400 text-white shadow-lg font-semibold">
             ❌ {error}
           </div>
         )}
@@ -97,13 +97,13 @@ export default function EditUser(){
           
           {/* User Information Section */}
           <div>
-            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-6">
+            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-600 mb-6">
               👤 Informations de l'utilisateur
             </h2>
 
             {/* Username Field */}
             <div className="mb-5">
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-rose-700 mb-2">
                 👤 Nom d'utilisateur
               </label>
               <input
@@ -118,7 +118,7 @@ export default function EditUser(){
 
             {/* Email Field */}
             <div className="mb-5">
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-rose-700 mb-2">
                 📧 Email
               </label>
               <input
@@ -133,7 +133,7 @@ export default function EditUser(){
 
             {/* Password Field */}
             <div className="mb-5">
-              <label className="block text-sm font-bold text-slate-700 mb-2">
+              <label className="block text-sm font-bold text-rose-700 mb-2">
                 🔒 Mot de passe (optionnel)
               </label>
               <input
@@ -152,10 +152,10 @@ export default function EditUser(){
 
           {/* Roles Section */}
           <div>
-            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-6">
+            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-600 mb-6">
               🎯 Rôles assignés
             </h2>
-            <p className="text-slate-500 text-sm mb-4">Modifiez les rôles de cet utilisateur</p>
+            <p className="text-rose-600 text-sm mb-4">Modifiez les rôles de cet utilisateur</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {roles.map((role, idx) => (
@@ -163,7 +163,7 @@ export default function EditUser(){
                   key={role.id} 
                   className={`card p-4 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
                     selectedRoles.includes(role.id) 
-                      ? 'ring-2 ring-blue-500 bg-blue-50' 
+                      ? 'ring-2 ring-rose-400 bg-rose-50' 
                       : 'hover:shadow-lg'
                   }`}
                   style={{ animationDelay: `${idx * 50}ms` }}
@@ -174,13 +174,13 @@ export default function EditUser(){
                         type="checkbox"
                         checked={selectedRoles.includes(role.id)}
                         onChange={() => handleRoleChange(role.id)}
-                        className="w-5 h-5 accent-blue-500 cursor-pointer"
+                        className="w-5 h-5 accent-rose-500 cursor-pointer"
                         disabled={submitting}
                       />
                     </div>
                     <div className="flex-1">
-                      <p className="font-bold text-slate-900">{role.name}</p>
-                      <p className="text-xs text-slate-600 mt-1">{role.description}</p>
+                      <p className="font-bold text-rose-900">{role.name}</p>
+                      <p className="text-xs text-rose-700 mt-1">{role.description}</p>
                     </div>
                   </div>
                 </label>
@@ -188,8 +188,8 @@ export default function EditUser(){
             </div>
 
             {selectedRoles.length > 0 && (
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <p className="text-sm text-blue-900 font-semibold">
+              <div className="mt-4 p-4 bg-rose-50 rounded-lg border-l-4 border-rose-500">
+                <p className="text-sm text-rose-900 font-semibold">
                   ✓ {selectedRoles.length} rôle(s) sélectionné(s)
                 </p>
               </div>

@@ -1,24 +1,20 @@
 package com.erp.userservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "roles")
+/**
+ * Role model - NO JPA annotations (using stored procedures only)
+ */
 public class Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private String description;
 
     public Role() {}
+
+    public Role(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
@@ -44,4 +40,12 @@ public class Role {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

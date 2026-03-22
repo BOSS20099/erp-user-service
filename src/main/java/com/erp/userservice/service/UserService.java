@@ -6,6 +6,7 @@ import com.erp.userservice.model.User;
 import com.erp.userservice.model.UserRole;
 import com.erp.userservice.repository.RoleRepository;
 import com.erp.userservice.repository.UserRepository;
+import com.erp.userservice.repository.UserRepository.PaginatedResult;
 import com.erp.userservice.repository.UserRoleRepository;
 
 import org.springframework.stereotype.Service;
@@ -28,8 +29,15 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public List<User> getUsers() {
-        return userRepository.listUsers();
+    public PaginatedResult<User> getUsers(int page, int size, String sortBy) {
+        return userRepository.getUsersPaginated(page, size, sortBy);
+    }
+
+    public PaginatedResult<User> searchUsers(String search, int page, int size, String sortBy) {
+        if (search == null || search.trim().isEmpty()) {
+            return userRepository.getUsersPaginated(page, size, sortBy);
+        }
+        return userRepository.searchUsersPaginated(search, page, size, sortBy);
     }
 
     public User getUser(Long id) {

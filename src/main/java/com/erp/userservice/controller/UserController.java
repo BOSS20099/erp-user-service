@@ -4,6 +4,7 @@ import com.erp.userservice.dto.AssignRolesDTO;
 import com.erp.userservice.dto.UserDTO;
 import com.erp.userservice.model.Role;
 import com.erp.userservice.model.User;
+import com.erp.userservice.repository.UserRepository.PaginatedResult;
 import com.erp.userservice.service.UserService;
 
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,16 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> listUsers() {
-        return userService.getUsers();
+    public PaginatedResult<User> listUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) String search) {
+        
+        if (search != null && !search.trim().isEmpty()) {
+            return userService.searchUsers(search, page, size, sortBy);
+        }
+        return userService.getUsers(page, size, sortBy);
     }
 
     @GetMapping("/{id}")

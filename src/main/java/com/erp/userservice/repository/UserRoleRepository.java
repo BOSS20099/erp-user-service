@@ -1,28 +1,56 @@
 package com.erp.userservice.repository;
 
 import com.erp.userservice.model.UserRole;
-import com.erp.userservice.model.UserRoleId;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * UserRole Repository - Uses stored procedures via JdbcTemplate (NO Hibernate/JPA)
+ */
 @Repository
-public interface UserRoleRepository extends JpaRepository<UserRole, UserRoleId> {
+public class UserRoleRepository {
 
-    @Query(value = "SELECT * FROM user_roles WHERE user_id = ?1", nativeQuery = true)
-    List<UserRole> findByUserId(Long userId);
+    private final JdbcTemplate jdbcTemplate;
 
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM user_roles WHERE user_id = ?1", nativeQuery = true)
-    void deleteByUserId(Long userId);
+    public UserRoleRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO user_roles(user_id, role_id) VALUES(?1, ?2)", nativeQuery = true)
-    void insertUserRole(Long userId, Long roleId);
+    /**
+     * Get user roles by user ID (direct SQL query)
+     */
+    public List<UserRole> findByUserId(Long userId) {
+        String sql = "SELECT user_id, role_id FROM user_roles WHERE user_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) -> mapRowToUserRole(rs));
+    }
+
+    /**
+     * Delete all user roles via stored procedure sp_delete_user_roles
+     */
+    public void deleteByUserId(Long userId) {
+        String sql = "CALL sp_delete_user_roles(?)";
+        jdbcTemplate.update(sql, userId);
+    }
+
+    /**
+     * Insert user role via stored procedure sp_assign_role_to_user
+     */
+    public void insertUserRole(Long userId, Long roleId) {
+        String sql = "CALL sp_assign_role_to_user(?, ?)";
+        jdbcTemplate.update(sql, userId, roleId);
+    }
+
+    /**
+     * Map ResultSet row to UserRole object
+     */
+    private UserRole mapRowToUserRole(ResultSet rs) throws SQLException {
+        UserRole userRole = new UserRole();
+        userRole.setUserId(rs.getLong("user_id"));
+        userRole.setRoleId(rs.getLong("role_id"));
+        return userRole;
+    }
 }

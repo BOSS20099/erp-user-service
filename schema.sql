@@ -1,30 +1,9 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Hôte : 127.0.0.1:3306
--- Généré le : mar. 17 mars 2026 à 16:51
--- Version du serveur : 8.0.31
--- Version de PHP : 8.0.26
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de données : `erp_dev`
---
-
--- --------------------------------------------------------
-
---
--- Structure de la table `roles`
---
 
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -34,9 +13,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `roles`
---
+
 
 INSERT INTO `roles` (`id`, `name`, `description`) VALUES
 (1, 'ADMIN', 'Le rôle le plus puissant. Permissions: gérer les utilisateurs, assigner les rôles, accéder à tous les modules, configurer l ERP, voir tous les rapports'),
@@ -47,11 +24,7 @@ INSERT INTO `roles` (`id`, `name`, `description`) VALUES
 (6, 'COMPTABLE', 'Comptable de l entreprise. Permissions: gérer transactions, voir factures, rapports financiers'),
 (7, 'GESTIONNAIRE_RH', 'Responsable ressources humaines. Permissions: gérer employés, gérer départements, consulter contrats');
 
--- --------------------------------------------------------
 
---
--- Structure de la table `users`
---
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
@@ -65,19 +38,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `users`
---
+
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `enabled`, `created_at`) VALUES
 (1, 'Meka', 'meka@gmail.com', '1234', 1, '2026-03-14 22:33:39'),
 (5, 'Mendrika', 'mendrika@gmail.com', '1234', 1, '2026-03-14 20:55:12');
 
--- --------------------------------------------------------
 
---
--- Structure de la table `user_roles`
---
 
 DROP TABLE IF EXISTS `user_roles`;
 CREATE TABLE IF NOT EXISTS `user_roles` (
@@ -87,9 +54,7 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   KEY `role_id` (`role_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `user_roles`
---
+
 
 INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
 (3, 1),
@@ -97,6 +62,3 @@ INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
 (5, 1);
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

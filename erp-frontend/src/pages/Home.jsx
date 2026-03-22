@@ -9,12 +9,12 @@ export default function Home(){
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-rose-100 overflow-hidden">
       {/* Decorative gradient elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/3 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-4000"></div>
+        <div className="absolute top-20 left-10 w-80 h-80 bg-rose-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse"></div>
+        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/3 w-80 h-80 bg-rose-400 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse animation-delay-4000"></div>
       </div>
 
       {/* Content */}
@@ -22,15 +22,15 @@ export default function Home(){
         <div className="text-center space-y-8 animate-fade-in-up">
           {/* Main Title */}
           <div className={`transition-all duration-1000 ${animateTitle ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-            <h1 className="text-7xl font-black tracking-tighter bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent mb-4 drop-shadow-lg">
+            <h1 className="text-7xl font-black tracking-tighter bg-gradient-to-r from-rose-400 via-pink-400 to-rose-600 bg-clip-text text-transparent mb-4 drop-shadow-lg">
               Bienvenue dans ERP Users
             </h1>
-            <div className="h-1 w-32 mx-auto bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+            <div className="h-1 w-32 mx-auto bg-gradient-to-r from-rose-400 to-pink-500 rounded-full"></div>
           </div>
 
           {/* Subtitle */}
-          <p className="text-2xl text-slate-300 font-light animate-slide-in-right">
-            ✨ Gérez vos utilisateurs efficacement avec un design moderne
+          <p className="text-2xl text-rose-700 font-light animate-slide-in-right">
+            ✨ Gérez vos utilisateurs efficacement
           </p>
 
           {/* Feature Cards */}
@@ -46,10 +46,10 @@ export default function Home(){
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
                 <div className="text-5xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
+                <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-600 mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-slate-600">{feature.desc}</p>
+                <p className="text-rose-700">{feature.desc}</p>
               </div>
             ))}
           </div>
@@ -76,20 +76,20 @@ export default function Home(){
             </div>
             
             {/* Stats */}
-            <div className="pt-8 mt-8 border-t border-white border-opacity-20">
-              <p className="text-slate-400 mb-4">Alimenté par les technologies modernes</p>
+            <div className="pt-8 mt-8 border-t border-rose-300 border-opacity-50">
+              <p className="text-rose-700 mb-4">Alimenté par les technologies modernes</p>
               <div className="flex justify-center gap-8 flex-wrap">
                 <div className="text-center">
-                  <div className="text-3xl font-black text-blue-400">100%</div>
-                  <div className="text-sm text-slate-400">Réactif</div>
+                  <div className="text-3xl font-black text-rose-400">100%</div>
+                  <div className="text-sm text-rose-600">Réactif</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-purple-400">∞</div>
-                  <div className="text-sm text-slate-400">Évolutif</div>
+                  <div className="text-3xl font-black text-pink-400">∞</div>
+                  <div className="text-sm text-rose-600">Évolutif</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-cyan-400">A+</div>
-                  <div className="text-sm text-slate-400">Performance</div>
+                  <div className="text-3xl font-black text-rose-500">A+</div>
+                  <div className="text-sm text-rose-600">Performance</div>
                 </div>
               </div>
             </div>
